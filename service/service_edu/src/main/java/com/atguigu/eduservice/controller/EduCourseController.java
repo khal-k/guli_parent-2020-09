@@ -1,11 +1,15 @@
 package com.atguigu.eduservice.controller;
 
 import com.atguigu.commonutils.R;
+import com.atguigu.eduservice.entity.EduCourse;
 import com.atguigu.eduservice.entity.vo.CourseInfoVo;
 import com.atguigu.eduservice.entity.vo.CoursePublishVo;
 import com.atguigu.eduservice.service.EduCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 /**
  * <p>
@@ -55,6 +59,29 @@ public class EduCourseController {
         return R.ok().data("coursePublishVo",coursePublishVo);
     }
 
+    //课程最终发布
+    @PostMapping("publishCourse/{courseId}")
+    public R publishCourse(@PathVariable("courseId") String courseId){
+        EduCourse eduCourse = new EduCourse();
+        eduCourse.setId(courseId);
+        eduCourse.setStatus("Normal");
+        eduCourseService.updateById(eduCourse);
+        return R.ok();
+    }
+
+    //查询所有课程
+    @GetMapping("getAllCourseInfo")
+    public R getAllCourseInfo(){
+        List<EduCourse> list= eduCourseService.list(null);
+        return R.ok().data("list",list);
+    }
+
+    //根据courseId删除课程以及章节和小节
+    @PostMapping("deleteCourseByCourseId/{courseId}")
+    public R deleteCourseByCourseId(@PathVariable("courseId") String courseId){
+        eduCourseService.deleteCourseById(courseId);
+        return R.ok();
+    }
 
 }
 
